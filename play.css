@@ -1,0 +1,52 @@
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+body{
+  font-family: 'Nanum Gothic', sans-serif
+}
+
+#login-buttons{
+  padding-top:17px;
+  margin-right:5px;
+}
+
+.profile-image{
+  width:30px;
+  height:30px;
+}
+
+.index-new-song{
+  width:202px;
+  border: 1px solid #cccccc;
+  background-color: #eeeeee;
+  height:auto;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+.index-new-song .youtube-link{
+  width:200px;
+  height:200px;
+}
+.index-new-song-info{
+  text-align: center;
+  padding:5px 5px 5px 5px;
+}
+.index-new-song-regist-band-name{
+  font-weight: bold;
+}
+.band-profile{
+  width:212px;
+  height:auto;
+  background-color: #eeeeee;
+  border:1px solid #cccccc;
+  border-radius: 5px;
+  padding:5px 5px 5px 5px;
+}
+.band-profile-image{
+  width:200px;
+  height:200px;
+  border-radius:100px;
+  background-position: center;
+  background-size: cover;
+}
+.index-band-name{
+  font-weight:bold;
+}
