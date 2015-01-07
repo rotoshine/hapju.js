@@ -1,5 +1,6 @@
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>커버곡 투표</title>
 </head>
 
@@ -92,9 +93,13 @@
             {{#if bandNotExist}}
               <div class="well">헉! 등록된 밴드가 하나도 없네요.</div>
             {{/if}}
-            {{#each bands}}
-              {{>BandProfile}}
-            {{/each}}
+            <ul class="list-inline">
+              {{#each bands}}
+                <li>
+                  {{>BandProfile}}                
+                </li>
+              {{/each}}
+            </ul>
           </div>
         </div>
       </div>
@@ -113,9 +118,13 @@
         <div class="panel panel-material-indigo">
           <div class="panel-heading">내가 소속된 밴드</div>
           <div class="panel-body">
-            {{#each myBands}}
-              {{>BandProfile}}
-            {{/each}}
+            <ul class="list-inline">              
+              {{#each myBands}}
+                <li>
+                  {{>BandProfile}}
+                </li>
+              {{/each}}
+            </ul>
           </div>
         </div>
       </div>
@@ -197,55 +206,85 @@
 <template name="BandHome">
   {{>Nav}}
   <div class="container">
-    <div class="col-xs-12 col-md-4">
-      {{>BandProfile}}
-    </div>
-    <div class="col-xs-12 col-md-8">
-      <div class="panel panel-material-indigo">
-        <div class="panel-heading">커버곡 목록</div>
-        <div class="panel-body">
-          <ul class="list-unstyled">
-            {{#if isMyBand}}
-              <li>
-                <div class="add-song well">
-                  <form class="form-vertical">
-                    <div class="form-group">
-                      <label class="col-xs-4">원곡 밴드이름</label>
-                      <div class="col-xs-8">
-                        <input id="origin-band-name" type="text" class="form-control" placeholder="원곡 밴드이름을 적어주세요.">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-xs-4">곡 이름</label>
-                      <div class="col-xs-8">
-                        <input id="song-name" type="text" class="form-control" placeholder="곡 이름을 적어주세요.">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-xs-4">youtube URL</label>
-                      <div class="col-xs-8">
-                        <input id="youtube-url" type="text" class="form-control" placeholder="youtube URL을 적어주세요.">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-xs-4">설명</label>
-                      <div class="col-xs-8">
-                        <textarea id="" rows="4" class="form-control" placeholder="곡에 대한 설명을 적어주세요."></textarea>
-                      </div>
-                    </div>
-                    <div class="text-right">
-                      <button class="btn btn-info"><i class="mdi-image-audiotrack"></i>추가</button>
-                    </div>
-                  </form>
-                </div>
-              </li>
-            {{/if}}
-            {{#each songs}}
-              <li></li>
-            {{/each}}
-          </ul>
+    <div class="col-md-3 hidden-xs hidden-sm">
+      <div class="panel">
+        <div class="panel-body text-center">
+          {{>BandProfile}}
         </div>
+      </div>      
+    </div>
+    <div class="col-xs-12 hidden-md hidden-lg">
+        밴드 미니 프로필 들어갈 부분
       </div>
+    <div class="col-xs-12 col-md-9">
+      {{#if isMyBand}}
+      <div class="add-song panel panel-material-indigo">
+        <div class="panel-heading">곡 등록하기</div>
+        <div class="panel-body">
+          <form class="form-vertical add-song-form">
+            <div class="form-group">
+              <label class="col-xs-4">원곡 밴드이름</label>
+              <div class="col-xs-8">
+                <input id="origin-band-name" type="text" class="form-control" placeholder="원곡 밴드이름을 적어주세요." required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-xs-4">곡 이름</label>
+              <div class="col-xs-8">
+                <input id="song-name" type="text" class="form-control" placeholder="곡 이름을 적어주세요." required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-xs-4">youtube URL</label>
+              <div class="col-xs-8">
+                <input id="youtube-url" type="text" class="form-control" placeholder="곡의 youtube URL을 적어주세요." required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-xs-4">설명</label>
+              <div class="col-xs-8">
+                <textarea id="description" rows="4" class="form-control" placeholder="곡에 대한 설명을 적어주세요." required></textarea>
+              </div>
+            </div>
+            <div class="text-right">
+              <button type="submit" class="btn btn-info add-song"><i class="mdi-image-audiotrack"></i>추가</button>
+            </div>
+          </form>
+        </div>
+      </div>              
+      {{/if}} 
+      <ul class="list-inline">
+        {{#each songs}}              
+        <li class="col-xs-12">
+          <article class="panel panel-material-indigo">
+            <div class="panel-body">
+              <div class="col-xs-12">
+                <div><img class="profile-image" src="{{registUserProfileImage registUser}}">
+                  <strong>{{registUser}}</strong>님이 곡을 등록하셨습니다.               
+                  <div class="pull-right">{{momentTime}}</div></div>
+              </div>
+              <div class="col-xs-12 col-md-6">                    
+                <iframe border="0" src="{{youtubeUrl}}" class="iframe"></iframe>
+                <div>{{originBandName}} - {{name}}</div>
+              </div>
+              <div class="col-xs-12 col-md-6">                    
+                <div class="col-xs-12">                            
+                  {{description}}
+                </div>
+                <div class="col-xs-12">
+                  {{#each comments}}
+                  이미지 : {{commentUser}} {{content}}
+                  {{/each}}
+                </div>
+                <div class="col-xs-12">
+
+                </div>
+              </div>
+            </div>
+          </article>
+        </li>
+        {{/each}}              
+      </ul>
       {{#if isMyBand}}
         TODO 편집기능 넣기
       {{/if}}

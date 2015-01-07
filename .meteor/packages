@@ -13,3 +13,4 @@ accounts-ui
 iron:router
 tomi:upload-server
 tomi:upload-jquery
+mrt:moment

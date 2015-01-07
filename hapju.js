@@ -1,6 +1,6 @@
 var Bands = new Mongo.Collection('bands');
 var Songs = new Mongo.Collection('songs');
-
+var SongComments = new Mongo.Collection('songComments');
 if (Meteor.isClient) {
   var UPLOADED_FILE_KEY = 'uploadedFiles';
   Router.route('/', function () {
@@ -40,8 +40,7 @@ if (Meteor.isClient) {
   });
 
   Router.route('/bands/:name', function(){
-    var band = Bands.findOne({name: this.params.name});
-    console.log(band);
+    var band = Bands.findOne({name: this.params.name});    
     if(band !== undefined){
       this.render('BandHome', { data: band });
     }else{
@@ -124,7 +123,7 @@ if (Meteor.isClient) {
       return Session.get(UPLOADED_FILE_KEY);
     }
   });
-
+   
   Template.RegistBand.events({
     'click .upload-control.start': function(){
       Uploader.finished = function(index, file){
@@ -135,15 +134,17 @@ if (Meteor.isClient) {
     'click .add-member': function(){
       Blaze.render(Template.RegistBandMember, $('.regist-band-members')[0]);
     },
-    'click .regist-band': function(){
+    'click .regist-band': function(){      
       var uploadedFile = Session.get(UPLOADED_FILE_KEY);
 
+      // default profile image
       var profileImageUrl = 'https://lh3.ggpht.com/nn0_2f2yehKR7fnMIZ0XrSWbC5Q0VPP7vNmLMV7ndNFinClynZRO4RBTGfbjVOs1fyA=w300-rw';
       if(uploadedFile !== undefined){
         profileImageUrl = uploadedFile.url;
       }
 
       var name = $('#regist-band-name').val();
+      
       // form validation
       var band = {
         name: name,
@@ -155,7 +156,7 @@ if (Meteor.isClient) {
         songCount: 0,
         commentCount: 0
       };
-
+      
       $('.regist-band-member').each(function(){
         band.members.push({
           position: $(this).find('.regist-band-member-position').val(),
@@ -191,13 +192,87 @@ if (Meteor.isClient) {
       }
     },
     songs: function(){
-      return Songs.find({registBandName:this.name});
+      var songs = Songs.find({registBandName:this.name});
+      for(var i = 0; i < songs.length; i++){
+        songs[i].comments = SongComments.find({songId: songs[i]._id}, {sort:{ createdAt:1}});
+        console.log(Meteor.users.findOne({'services.twitter.screenName': songs[i].registUser}));        
+        songs[i].momentTime = moment(songs[i].createAt).from();
+      }
+      console.log(songs);
+      return songs;
+    },
+    comments: function(songId){
+      return SongComments.find({songId: songId}, {sort:{ createdAt: -1}})
+    },
+    momentTime: function(songId){
+      var song = Songs.findOne(songId);
+      if(song && song.createdAt){
+        return moment(song.createdAt).from();
+      }
+    },
+    registUserProfileImage: function(twitterId){
+      console.log(twitterId);
+      var user = Meteor.users.findOne({'services.twitter.screenName': twitterId});
+      console.log(user);
+      if(user){
+        return user.services.twitter.profile_image_url
+      }else{
+        return '';
+      }      
+    }
+  });
+  
+  Template.BandHome.events({
+    'submit #add-song-comment': function(){
+      return false;
+    },
+    'submit .add-song-form': function(){      
+      var youtubeUrl = $('#youtube-url').val();
+      
+      if(youtubeUrl.indexOf('/watch?v=') > -1){
+        youtubeUrl = youtubeUrl.replace('/watch?v=', '/embed/');
+      }else if(youtubeUrl.indexOf('youtu.be') > -1){
+        youtubeUrl = youtubeUrl.replace('youtu.be', 'youtube.com/embed')
+      }
+      
+      console.log(youtubeUrl);
+          
+      var song = {
+        originBandName: $('#origin-band-name').val(),
+        name: $('#song-name').val(),
+        youtubeUrl: youtubeUrl,
+        description: $('#description').val(),
+        registBandName: this.name,
+        commentCount:0, 
+        votes: [],
+        registUser: Meteor.user().services.twitter.screenName,
+        createAt: new Date()
+      };            
+      Songs.insert(song);
+      
+      // band song count add
+      Bands.update(
+        this._id,
+        {
+          $inc: {
+            songCount: 1
+          }  
+        }
+      );
+      
+      // form init
+      $('#origin-band-name').val('');
+      $('#song-name').val('');
+      $('#youtube-url').val('');
+      $('#description').val('');
+      
+      return false;
     }
   });
 }
 
 if (Meteor.isServer) {
-  Meteor.startup(function () {
+  Meteor.startup(function () {   
     UploadServer.init({
       tmpDir: process.env.PWD + '/.uploads/tmp',
       uploadDir: process.env.PWD + '/.uploads',
