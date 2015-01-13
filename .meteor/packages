@@ -14,3 +14,4 @@ iron:router
 tomi:upload-server
 tomi:upload-jquery
 mrt:moment
+rzymek:moment-locale-ko

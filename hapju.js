@@ -2,6 +2,7 @@ var Bands = new Mongo.Collection('bands');
 var Songs = new Mongo.Collection('songs');
 var SongComments = new Mongo.Collection('songComments');
 
+moment.locale('ko');
 function getMyTwitterId(){
   return Meteor.user().services.twitter.screenName;
 }
@@ -202,26 +203,13 @@ if (Meteor.isClient) {
       return Meteor.user().services.twitter.profile_image_url;
     },
     songs: function(){
-      var songs = Songs.find({registBandName:this.name});
-      for(var i = 0; i < songs.length; i++){
-        songs[i].comments = SongComments.find({songId: songs[i]._id}, {sort:{ createdAt:1}});
-        console.log(Meteor.users.findOne({'services.twitter.screenName': songs[i].registUser}));
-      }
-      console.log(songs);
-      return songs;
+      return Songs.find({registBandName:this.name});
     },
     comments: function(){
-      return SongComments.find({songId: this._id}, {sort:{ createdAt: -1}})
+      return SongComments.find({songId: this._id}, {sort:{ createdAt: 1}})
     },
     getMomentTime: function(date){
       return moment(date).from();
-    },
-    momentTime: function(){
-      if(this.createdAt){
-        return moment(this.createdAt).from();
-      }else if(this.createAt){
-        return moment(this.createAt).from();
-      }
     },
     profileImageByTwitterId: getProfileImageByTwitterId,
     voteUsersProfileImage: function(){

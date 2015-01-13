@@ -56,29 +56,16 @@
                 <div class="col-xs-12">
                   <div><img class="profile-image" src="{{profileImageByTwitterId registUser}}">
                     <strong>{{registUser}}</strong>님이 곡을 등록하셨습니다.
-                    <div class="pull-right">{{momentTime}}</div></div>
+                    <div class="pull-right"><small>{{getMomentTime createdAt}}</small></div></div>
                 </div>
                 <div class="col-xs-12 col-md-6">
                   <div>{{originBandName}} - {{name}}</div>
                   <iframe border="0" src="{{youtubeUrl}}" class="iframe"></iframe>
-                </div>
-                <div class="col-xs-12 col-md-6">
                   <div class="col-xs-12">
-                    {{description}}
-                  </div>
-                  <div class="col-xs-12 separate-top">
-                    {{#each comments}}
-                      <div class="pull-left">
-                        <img class="profile-image" src="{{profileImageByTwitterId commentUser}}" alt=""/> : {{commentUser}} {{content}}
-                      </div>
-                      <div class="pull-right">{{getMomentTime createdAt}}</div>
-                    {{/each}}
-                  </div>
-                  <div class="col-xs-12 separate-top">
                     <div class="pull-left">
                       {{votes.length}} 명이 커버에 찬성합니다.<br>
                       {{#each voteUsersProfileImage}}
-                       <img src="{{this}}" class="profile-image" alt=""/>
+                        <img src="{{this}}" class="profile-image" alt=""/>
                       {{/each}}
                     </div>
                     <div class="pull-right">
@@ -87,14 +74,40 @@
                       {{/if}}
                     </div>
                   </div>
-                  <div class="col-xs-12 separate-top" id="comment-wrapper">
-                    <form class="inline" id="add-song-comment-form">
-                      <img class="comment-profile-image" src="{{profileImage}}" alt=""/>
-                      <input id="comment-content" class="form-control" type="text" placeholder="이 곡에 대해 입력해보세요."/>
-                      <button class="btn btn-primary btn-xs ripple-effect" type="submit">
-                        <i class="mdi-content-create"></i>
-                      </button>
-                    </form>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                  <div class="col-xs-12">
+                    {{description}}
+                  </div>
+                  <hr/>
+                  <div class="col-xs-12">
+                    <ul class="list-unstyled">
+                      {{#each comments}}
+                        <li>
+                          <div class="pull-left">
+                            <img class="comment-profile-image" src="{{profileImageByTwitterId commentUser}}" alt=""/>
+                              <strong>{{commentUser}}</strong>&nbsp;<span>{{content}}</span>
+                          </div>
+                          <div class="pull-right"><small>{{getMomentTime createdAt}}</small></div>
+                        </li>
+                      {{/each}}
+                      <li>
+                        <form id="add-song-comment-form">
+                          <div class="pull-left">
+                            <img class="comment-profile-image" src="{{profileImage}}" alt=""/>
+                            <strong>{{commentUser}}</strong>
+                            <input id="comment-content" class="form-control" type="text" placeholder="이 곡 어떠세요?."/>
+                          </div>
+                          <div class="pull-right">
+                            <small>
+                              <button class="btn btn-primary btn-xs ripple-effect" type="submit">
+                                <i class="mdi-content-create"></i>
+                              </button>
+                            </small>
+                          </div>
+                        </form>
+                      </li>
+                    </ul>
                   </div>
                 </div>
               </div>
