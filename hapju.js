@@ -1,6 +1,18 @@
 var Bands = new Mongo.Collection('bands');
 var Songs = new Mongo.Collection('songs');
 var SongComments = new Mongo.Collection('songComments');
+
+function getMyTwitterId(){
+  return Meteor.user().services.twitter.screenName;
+}
+function getProfileImageByTwitterId(twitterId){
+  var user = Meteor.users.findOne({'services.twitter.screenName': twitterId});
+  if(user){
+    return user.services.twitter.profile_image_url
+  }else{
+    return '';
+  }
+}
 if (Meteor.isClient) {
   var UPLOADED_FILE_KEY = 'uploadedFiles';
   Router.route('/', function () {
@@ -12,15 +24,10 @@ if (Meteor.isClient) {
             return Bands.find({}, sortQuery);
           },
           newSongs: function(){
-            //return Songs.find({}, sortQuery);
-            return [
-              {
-                originBandName: 'Man With A Mission',
-                name: 'Take what u want',
-                registBandName: '어그로 크리쳐스',
-                youtubeLink: 'http://youtube.com/embed/aIW6UafTwGE'
-              }
-            ];
+            return Songs.find({}, sortQuery);
+          },
+          isNotExistNewSong: function(){
+            return Songs.find().count() === 0;
           }
         };
       }
@@ -191,43 +198,85 @@ if (Meteor.isClient) {
         return false;
       }
     },
+    profileImage: function(){
+      return Meteor.user().services.twitter.profile_image_url;
+    },
     songs: function(){
       var songs = Songs.find({registBandName:this.name});
       for(var i = 0; i < songs.length; i++){
         songs[i].comments = SongComments.find({songId: songs[i]._id}, {sort:{ createdAt:1}});
-        console.log(Meteor.users.findOne({'services.twitter.screenName': songs[i].registUser}));        
-        songs[i].momentTime = moment(songs[i].createAt).from();
+        console.log(Meteor.users.findOne({'services.twitter.screenName': songs[i].registUser}));
       }
       console.log(songs);
       return songs;
     },
-    comments: function(songId){
-      return SongComments.find({songId: songId}, {sort:{ createdAt: -1}})
+    comments: function(){
+      return SongComments.find({songId: this._id}, {sort:{ createdAt: -1}})
     },
-    momentTime: function(songId){
-      var song = Songs.findOne(songId);
-      if(song && song.createdAt){
-        return moment(song.createdAt).from();
+    getMomentTime: function(date){
+      return moment(date).from();
+    },
+    momentTime: function(){
+      if(this.createdAt){
+        return moment(this.createdAt).from();
+      }else if(this.createAt){
+        return moment(this.createAt).from();
       }
     },
-    registUserProfileImage: function(twitterId){
-      console.log(twitterId);
-      var user = Meteor.users.findOne({'services.twitter.screenName': twitterId});
-      console.log(user);
-      if(user){
-        return user.services.twitter.profile_image_url
-      }else{
-        return '';
-      }      
+    profileImageByTwitterId: getProfileImageByTwitterId,
+    voteUsersProfileImage: function(){
+      var votes = this.votes;
+      var profileImages = [];
+      for(var i = 0; i < votes.length; i++){
+        profileImages.push(getProfileImageByTwitterId(votes[i].twitterId));
+      }
+      return profileImages;
+    },
+    isNotVote: function(){
+      var votes = this.votes;
+      for(var i = 0; i < votes.length; i++){
+        if(votes[i].twitterId === Meteor.user().services.twitter.screenName){
+          return false;
+        }
+      }
+      return true;
     }
   });
   
   Template.BandHome.events({
-    'submit #add-song-comment': function(){
+    'click #hapju-vote': function(){
+      var song = Songs.findOne(this._id);
+      var isNotVoted = true;
+      for(var i = 0; i < song.votes.length; i++){
+        if(song.votes[i].twitterId === getMyTwitterId()){
+          isNotVoted = false;
+          break;
+        }
+      }
+      if(isNotVoted){
+        song.votes.push({
+          twitterId: getMyTwitterId(),
+          voteDate: new Date()
+        });
+        Songs.update(this._id, song);
+      }
+    },
+    'submit #add-song-comment-form': function(){
+      var comment = {
+        commentUser: getMyTwitterId(),
+        content: $('#comment-content').val(),
+        createdAt: new Date(),
+        songId: this._id
+      };
+
+      SongComments.insert(comment);
+
+      $('#comment-content').val('');
       return false;
     },
-    'submit .add-song-form': function(){      
-      var youtubeUrl = $('#youtube-url').val();
+    'submit .add-song-form': function(){
+      var $youtubeUrl = $('#youtube-url');
+      var youtubeUrl = $youtubeUrl.val();
       
       if(youtubeUrl.indexOf('/watch?v=') > -1){
         youtubeUrl = youtubeUrl.replace('/watch?v=', '/embed/');
@@ -263,7 +312,7 @@ if (Meteor.isClient) {
       // form init
       $('#origin-band-name').val('');
       $('#song-name').val('');
-      $('#youtube-url').val('');
+      $youtubeUrl.val('');
       $('#description').val('');
       
       return false;
@@ -272,7 +321,7 @@ if (Meteor.isClient) {
 }
 
 if (Meteor.isServer) {
-  Meteor.startup(function () {   
+  Meteor.startup(function () {
     UploadServer.init({
       tmpDir: process.env.PWD + '/.uploads/tmp',
       uploadDir: process.env.PWD + '/.uploads',

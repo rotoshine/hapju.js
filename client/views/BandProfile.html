@@ -1,0 +1,18 @@
+<template name="BandProfile">
+  <div class="band-profile text-center">
+    <a href="/bands/{{name}}">
+      <div class="band-profile-image" style="background-image:url('{{profileImage}}')"></div>
+    </a>
+    <div class="index-band-name">
+      <a href="/bands/{{name}}">{{name}}</a>
+    </div>
+    <div>현재 <span class="label label-info">{{songCount}}</span>곡 등록</div>
+    <ul class="list-unstyled index-band-members">
+      {{#each members}}
+        <li>{{position}} :
+          <a href="https://twitter.com/{{twitterId}}" target="_blank">{{twitterId}}</a>
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+</template>

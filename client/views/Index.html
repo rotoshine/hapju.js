@@ -1,0 +1,48 @@
+<template name="Index">
+  {{>Nav}}
+  <div class="container">
+    <div class="col-xs-12">
+      <div class="panel panel-material-indigo">
+        <div class="panel-heading">이게 뭐죠?</div>
+        <div class="panel-body">
+          커버곡을 연주하는 밴드에서 커버곡 고르기 쉽게 하기 위해서 만들었습니다.
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-12 col-md-6">
+      <div class="panel panel-material-indigo">
+        <div class="panel-heading">새로 등록된 곡</div>
+        <div class="panel-body">
+          <ul class="list-inline">
+            {{#each newSongs}}
+              <li>
+                <div class="index-new-song">
+                  <iframe class="youtube-link" src="{{youtubeUrl}}" frameborder="0"></iframe>
+                  <div class="index-new-song-info">
+                    <span class="index-new-song-regist-band-name">{{registBandName}}</span>{{getTextConnector registBandName}} 등록
+                  </div>
+                </div>
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-12 col-md-6">
+      <div class="panel panel-material-indigo">
+        <div class="panel-heading">새로 등록된 밴드</div>
+        <div class="panel-body">
+          <ul class="list-inline">
+            {{#each newBands}}
+              <li>
+                {{>BandProfile}}
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

@@ -1,0 +1,31 @@
+<template name="MyBands">
+  {{>Nav}}
+  <div class="container">
+    {{#if notExistEnteredBand}}
+      <div class="col-xs-12">
+        <div class="well">소속된 밴드가 없습니다.</div>
+      </div>
+    {{/if}}
+    {{#unless notExistEnteredBand}}
+      <div class="col-xs-12">
+        <div class="panel panel-material-indigo">
+          <div class="panel-heading">내가 소속된 밴드</div>
+          <div class="panel-body">
+            <ul class="list-inline">
+              {{#each myBands}}
+                <li>
+                  {{>BandProfile}}
+                </li>
+              {{/each}}
+            </ul>
+          </div>
+        </div>
+      </div>
+    {{/unless}}
+    {{#if currentUser}}
+      <div class="col-xs-12">
+        {{>RegistBand}}
+      </div>
+    {{/if}}
+  </div>
+</template>

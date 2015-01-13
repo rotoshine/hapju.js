@@ -1,0 +1,110 @@
+<template name="BandHome">
+  {{>Nav}}
+  <div class="container">
+    <div class="col-md-3 hidden-xs hidden-sm">
+      <div class="panel">
+        <div class="panel-body text-center">
+          {{>BandProfile}}
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 hidden-md hidden-lg">
+      밴드 미니 프로필 들어갈 부분
+    </div>
+    <div class="col-xs-12 col-md-9">
+      {{#if isMyBand}}
+        <div class="add-song panel panel-material-indigo">
+          <div class="panel-heading">곡 등록하기</div>
+          <div class="panel-body">
+            <form class="form-vertical add-song-form">
+              <div class="form-group">
+                <label class="col-xs-4">원곡 밴드이름</label>
+                <div class="col-xs-8">
+                  <input id="origin-band-name" type="text" class="form-control" placeholder="원곡 밴드이름을 적어주세요." required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-xs-4">곡 이름</label>
+                <div class="col-xs-8">
+                  <input id="song-name" type="text" class="form-control" placeholder="곡 이름을 적어주세요." required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-xs-4">youtube URL</label>
+                <div class="col-xs-8">
+                  <input id="youtube-url" type="text" class="form-control" placeholder="곡의 youtube URL을 적어주세요." required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-xs-4">설명</label>
+                <div class="col-xs-8">
+                  <textarea id="description" rows="4" class="form-control" placeholder="곡에 대한 설명을 적어주세요." required></textarea>
+                </div>
+              </div>
+              <div class="text-right">
+                <button type="submit" class="btn btn-info add-song"><i class="mdi-image-audiotrack"></i>추가</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      {{/if}}
+      <ul class="list-inline">
+        {{#each songs}}
+          <li class="col-xs-12">
+            <article class="panel panel-material-indigo">
+              <div class="panel-body">
+                <div class="col-xs-12">
+                  <div><img class="profile-image" src="{{profileImageByTwitterId registUser}}">
+                    <strong>{{registUser}}</strong>님이 곡을 등록하셨습니다.
+                    <div class="pull-right">{{momentTime}}</div></div>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                  <div>{{originBandName}} - {{name}}</div>
+                  <iframe border="0" src="{{youtubeUrl}}" class="iframe"></iframe>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                  <div class="col-xs-12">
+                    {{description}}
+                  </div>
+                  <div class="col-xs-12 separate-top">
+                    {{#each comments}}
+                      <div class="pull-left">
+                        <img class="profile-image" src="{{profileImageByTwitterId commentUser}}" alt=""/> : {{commentUser}} {{content}}
+                      </div>
+                      <div class="pull-right">{{getMomentTime createdAt}}</div>
+                    {{/each}}
+                  </div>
+                  <div class="col-xs-12 separate-top">
+                    <div class="pull-left">
+                      {{votes.length}} 명이 커버에 찬성합니다.<br>
+                      {{#each voteUsersProfileImage}}
+                       <img src="{{this}}" class="profile-image" alt=""/>
+                      {{/each}}
+                    </div>
+                    <div class="pull-right">
+                      {{#if isNotVote}}
+                        <button id="hapju-vote">찬성</button>
+                      {{/if}}
+                    </div>
+                  </div>
+                  <div class="col-xs-12 separate-top" id="comment-wrapper">
+                    <form class="inline" id="add-song-comment-form">
+                      <img class="comment-profile-image" src="{{profileImage}}" alt=""/>
+                      <input id="comment-content" class="form-control" type="text" placeholder="이 곡에 대해 입력해보세요."/>
+                      <button class="btn btn-primary btn-xs ripple-effect" type="submit">
+                        <i class="mdi-content-create"></i>
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </li>
+        {{/each}}
+      </ul>
+      {{#if isMyBand}}
+        TODO 편집기능 넣기
+      {{/if}}
+    </div>
+  </div>
+</template>

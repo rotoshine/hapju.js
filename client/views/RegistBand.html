@@ -1,0 +1,34 @@
+<template name="RegistBand">
+  <div class="panel panel-material-indigo">
+    <div class="panel-heading">밴드 등록요청</div>
+    <div class="panel-body text-center">
+      <form class="regist-band-form col-xs-12">
+        <div class="form-group">
+          <label class="col-xs-4">밴드 이름 <span><i class="mdi-action-done"></i></span></label>
+          <div class="col-xs-8">
+            <input type="text" class="form-control" id="regist-band-name"
+                   placeholder="밴드 이름을 입력하세요." required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-xs-4">멤버</label>
+          <div class="col-xs-8 pull-right regist-band-members">
+            {{>RegistBandMember}}
+          </div>
+        </div>
+        <div class="col-xs-12 text-right">
+          <button type="button" class="btn btn-info add-member btn-fab btn-raised mdi-social-person-add"></button>
+        </div>
+        <div class="form-group">
+          <label class="col-xs-4">프로필 이미지</label>
+          <div class="col-xs-8">
+            {{>upload_bootstrap contentType='images' fileTypes='.jpg' multiple=false }}
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="panel-footer text-right">
+      <button type="button" class="btn btn-primary regist-band mdi-content-save btn-fab btn-raised"></button>
+    </div>
+  </div>
+</template>
