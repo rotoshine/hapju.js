@@ -339,7 +339,7 @@ if (Meteor.isClient) {
       }
       return false;
     },
-    'submit #hapju-vote-form': function(){
+    'submit .hapju-vote-form': function(){
       var song = Songs.findOne(this._id);
       var isNotVoted = true;
       for(var i = 0; i < song.votes.length; i++){
