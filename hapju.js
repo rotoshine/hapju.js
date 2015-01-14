@@ -291,6 +291,7 @@ if (Meteor.isClient) {
       return Meteor.user().services.twitter.profile_image_url;
     },
     songs: function(){
+      console.log('regist band name:' + this.name);
       return Songs.find({registBandName:this.name}, {sort: {createdAt: -1}});
     },
     comments: function(){
