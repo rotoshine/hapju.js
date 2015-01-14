@@ -291,7 +291,7 @@ if (Meteor.isClient) {
       return Meteor.user().services.twitter.profile_image_url;
     },
     songs: function(){
-      return Songs.find({registBandName:this.name});
+      return Songs.find({registBandName:this.name}, {sort: {createdAt: -1}});
     },
     comments: function(){
       return SongComments.find({songId: this._id}, {sort:{ createdAt: 1}})
@@ -357,8 +357,8 @@ if (Meteor.isClient) {
       }
       return false;
     },
-    'submit #add-song-comment-form': function(){
-      var $commentContent = $('#comment-content');
+    'submit .add-song-comment-form': function(event){
+      var $commentContent = $(event.target).find('.comment-content');
       if($commentContent.val() !== ''){
         var comment = {
           commentUser: getMyTwitterId(),
@@ -384,7 +384,7 @@ if (Meteor.isClient) {
       }
       
       console.log(youtubeUrl);
-          
+
       var song = {
         originBandName: $('#origin-band-name').val(),
         name: $('#song-name').val(),
@@ -394,9 +394,8 @@ if (Meteor.isClient) {
         commentCount:0, 
         votes: [],
         registUser: Meteor.user().services.twitter.screenName,
-        createAt: new Date()
+        createdAt: new Date()
       };
-
       if(song.originBandName === ''){
         modalAlert.show('어떤 밴드의 노래인지 좀 적어주시면 어디 덧납니까.');
       }else if(song.name === ''){

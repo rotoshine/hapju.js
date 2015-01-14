@@ -57,81 +57,77 @@
           </div>
         </div>
       {{/if}}
-      <ul class="list-inline">
-        {{#each songs}}
-          <li class="col-xs-12">
-            <article class="song-panel panel panel-material-indigo">
-              <div class="panel-body">
-                <div class="col-xs-12">
-                  <div><img class="profile-image" src="{{profileImageByTwitterId registUser}}">
-                    <strong>{{registUser}}</strong>님이 곡을 등록하셨습니다.
-                    <div class="pull-right">
-                      <small>{{getMomentTime createdAt}}</small>
-                      {{#if isMySong}}
-                        <form class="inline song-remove-form">
-                          <button type="submit" class="btn btn-danger"><i class="mdi-content-remove-circle"></i></button>
-                        </form>
-                      {{/if}}
-                    </div>
-                  </div>
-                </div>
-                <div class="col-xs-12 col-md-6">
-                  <div>{{originBandName}} - {{name}}</div>
-                  <iframe src="{{youtubeUrl}}" class="iframe"></iframe>
-                  <div class="col-xs-12">
-                    <div class="pull-left">
-                      <span class="label label-info">{{votes.length}}</span> 명이 커버에 찬성합니다.<br>
-                      {{#each voteUsersProfileImage}}
-                        <img src="{{this}}" class="profile-image" alt=""/>
-                      {{/each}}
-                    </div>
-                    <div class="pull-right">
-                      {{#if isNotVote}}
-                        <form id="hapju-vote-form">
-                          <button type="submit"><i class="mdi-action-favorite"></i> 찬성</button>
-                        </form>
-                      {{/if}}
-                    </div>
-                  </div>
-                </div>
-                <div class="col-xs-12 col-md-6">
-                  <div class="col-xs-12">
-                    {{description}}
-                  </div>
-                  <hr/>
-                  <ul class="list-unstyled">
-                    {{#each comments}}
-                      <li class="row">
-                        <div class="pull-left">
-                          <img class="comment-profile-image" src="{{profileImageByTwitterId commentUser}}" alt=""/>
-                            <strong>{{commentUser}}</strong>&nbsp;<span>{{content}}</span>
-                        </div>
-                        <div class="pull-right"><small>{{getMomentTime createdAt}}</small></div>
-                      </li>
-                    {{/each}}
-                    <li class="row">
-                      <form id="add-song-comment-form">
-                        <div class="pull-left">
-                          <img class="comment-profile-image" src="{{profileImage}}" alt=""/>
-                          <strong>{{currentUser.services.twitter.screenName}}</strong>
-                          <input id="comment-content" class="form-control inline" type="text" placeholder="이 곡 어떠세요?."/>
-                        </div>
-                        <div class="pull-right">
-                          <small>
-                            <button class="btn btn-primary btn-xs ripple-effect" type="submit">
-                              <i class="mdi-content-create"></i>
-                            </button>
-                          </small>
-                        </div>
-                      </form>
-                    </li>
-                  </ul>
+      {{#each songs}}
+        <article class="song-panel panel panel-material-indigo">
+          <div class="panel-body">
+            <div class="col-xs-12">
+              <div><img class="profile-image" src="{{profileImageByTwitterId registUser}}">
+                <strong>{{registUser}}</strong>님이 곡을 등록하셨습니다.
+                <div class="pull-right">
+                  <small>{{getMomentTime createdAt}}</small>
+                  {{#if isMySong}}
+                    <form class="inline song-remove-form">
+                      <button type="submit" class="btn btn-danger"><i class="mdi-content-remove-circle"></i></button>
+                    </form>
+                  {{/if}}
                 </div>
               </div>
-            </article>
-          </li>
-        {{/each}}
-      </ul>
+            </div>
+            <div class="col-xs-12 col-md-6">
+              <div>{{originBandName}} - {{name}}</div>
+              <iframe src="{{youtubeUrl}}" class="iframe"></iframe>
+              <div class="col-xs-12">
+                <div class="pull-left">
+                  <span class="label label-info">{{votes.length}}</span> 명이 커버에 찬성합니다.<br>
+                  {{#each voteUsersProfileImage}}
+                    <img src="{{this}}" class="profile-image" alt=""/>
+                  {{/each}}
+                </div>
+                <div class="pull-right">
+                  {{#if isNotVote}}
+                    <form id="hapju-vote-form">
+                      <button type="submit"><i class="mdi-action-favorite"></i> 찬성</button>
+                    </form>
+                  {{/if}}
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12 col-md-6">
+              <div class="col-xs-12">
+                {{description}}
+              </div>
+              <hr/>
+              <ul class="list-unstyled">
+                {{#each comments}}
+                  <li class="row">
+                    <div class="pull-left">
+                      <img class="comment-profile-image" src="{{profileImageByTwitterId commentUser}}" alt=""/>
+                        <strong>{{commentUser}}</strong>&nbsp;<span>{{content}}</span>
+                    </div>
+                    <div class="pull-right"><small>{{getMomentTime createdAt}}</small></div>
+                  </li>
+                {{/each}}
+                <li class="row">
+                  <form class="add-song-comment-form">
+                    <div class="pull-left">
+                      <img class="comment-profile-image" src="{{profileImage}}" alt=""/>
+                      <strong>{{currentUser.services.twitter.screenName}}</strong>
+                      <input class="comment-content form-control inline" type="text" placeholder="이 곡 어떠세요?."/>
+                    </div>
+                    <div class="pull-right">
+                      <small>
+                        <button class="btn btn-primary btn-xs ripple-effect" type="submit">
+                          <i class="mdi-content-create"></i>
+                        </button>
+                      </small>
+                    </div>
+                  </form>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </article>
+      {{/each}}
     </div>
   </div>
 </template>

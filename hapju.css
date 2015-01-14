@@ -96,7 +96,7 @@ body{
   height:20px;
 }
 .song-panel{
-  position: absolute;
+  position: relative;
 }
 
 #valid-band-name{
