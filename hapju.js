@@ -243,7 +243,7 @@ if (Meteor.isClient) {
         modalAlert.show('멤버는 1명 이상 있어야죠.');
         return false;
       }
-      if(Bands.find({ name: insertBandName }).count() > 0){
+      if(Bands.find({ name: band.name }).count() > 0){
         modalAlert.show('같은 밴드 이름이 있네요.');
         return false;
       }
@@ -258,6 +258,7 @@ if (Meteor.isClient) {
         Bands.insert(band);
       }else{
         modalAlert.show('밴드 멤버에 자신이 포함되어 있어야 합니다.');
+        return false;
       }
 
       // form initialize
