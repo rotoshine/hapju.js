@@ -89,3 +89,8 @@ body{
   width:100%;
   position:absolute;
 }
+
+.uploaded-image{
+  width:50%;
+  height:50%;
+}

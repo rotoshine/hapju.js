@@ -157,7 +157,9 @@ if (Meteor.isClient) {
   Template.RegistBand.events({
     'click .upload-control.start': function(){
       Uploader.finished = function(index, file){
+        Uploader.uploadUrl = location.protocol + '//' + location.host + '/';
         console.log('uploaded file', file);
+        $('.uploaded-image').attr('src', file.url);
         Session.set(UPLOADED_FILE_KEY, file);
       }
     },
@@ -361,6 +363,7 @@ if (Meteor.isServer) {
       getDirectory: function(file, formData){
         return formData.contentType;
       },
+      maxPostSize: 4000000,
       finished: function(file, folder, formFileds){
         console.log('Write to database: ' + folder + '/' + file);
       }
