@@ -1,3 +1,7 @@
 .uploads
 .idea
 meteor.sh
+build.sh
+run.sh
+bundle.tar
+bundle/*

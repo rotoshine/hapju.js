@@ -142,7 +142,7 @@ if (Meteor.isClient) {
       }
     	// 한글이 아닐때
     	if (code < 0 || code > 11171){
-        return text;
+        return '';
       }
 
       if(code % 28 === 0){
