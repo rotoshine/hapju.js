@@ -62,6 +62,9 @@ body{
   position: absolute;
 }
 
+#valid-band-name{
+  display:none;
+}
 /* modal */
 .backdrop{
   position:fixed;

@@ -178,6 +178,18 @@ if (Meteor.isClient) {
   });
 
   Template.RegistBand.events({
+    'blur #regist-band-name': function(){
+      var insertBandName = $('#regist-band-name').val();
+      if(insertBandName !== ''){
+        var hasExistBand = Bands.find({ name: insertBandName }).count() > 0;
+        if(hasExistBand){
+          $('#valid-band-name').hide();
+          modalAlert.show('같은 밴드 이름이 있습니다.');
+        }else{
+          $('#valid-band-name').show();
+        }
+      }
+    },
     'click .upload-control.start': function(){
       Uploader.finished = function(index, file){
         if(location.href.indexOf('hapju.winterwolf.me') > -1){
@@ -229,6 +241,10 @@ if (Meteor.isClient) {
       });
       if(band.members.length === 0){
         modalAlert.show('멤버는 1명 이상 있어야죠.');
+        return false;
+      }
+      if(Bands.find({ name: insertBandName }).count() > 0){
+        modalAlert.show('같은 밴드 이름이 있네요.');
         return false;
       }
       var hasMe = false;
