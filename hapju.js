@@ -253,6 +253,9 @@ if (Meteor.isClient) {
         }
       }
       return true;
+    },
+    isNotExistSong: function(){
+      return Songs.find().count() === 0;
     }
   });
   

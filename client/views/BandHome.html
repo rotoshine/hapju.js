@@ -13,6 +13,9 @@
       밴드 미니 프로필 들어갈 부분
     </div>
     <div class="col-xs-12 col-md-9">
+      {{#if isNotExistSong}}
+        <div class="well">저런! 밴드에 등록된 곡이 없네요.</div>
+      {{/if}}
       {{#if isMyBand}}
         <div class="add-song panel panel-material-indigo">
           <div class="panel-heading">곡 등록하기</div>
