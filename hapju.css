@@ -47,6 +47,43 @@ body{
   background-position: center;
   background-size: cover;
 }
+.absolute{
+  position: absolute;
+}
+.relative{
+  position:relative;
+}
+.band-mini-profile-members-wrapper{
+  position:absolute;
+  right:0;
+  bottom:0;
+}
+.band-mini-profile-members{
+  position: absolute;
+  right:15px;
+  bottom:15px;
+  padding-right:10px;
+  padding-bottom:10px;
+}
+.square-box{
+  position:relative;
+  width:100%;
+}
+.square-box:before{
+  content: '';
+  display: block;
+  padding-top:100%;
+}
+.square-box .content{
+  border-radius: 50%;
+  background-position: center;
+  background-size: cover;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
 .index-band-name{
   font-weight:bold;
 }

@@ -1,0 +1,24 @@
+<template name="BandMiniProfile">
+  <div class="row">
+    <div class="col-xs-5">
+      <a href="/bands/{{name}}">
+        <div class="square-box">
+          <div class="content" style="background-image:url('{{profileImage}}')"></div>
+        </div>
+      </a>
+      <div class="index-band-name">
+        <a href="/bands/{{name}}">{{name}}</a>
+      </div>
+      <div>현재 <span class="label label-info">{{songCount}}</span>곡 등록</div>
+    </div>
+    <div class="col-xs-7 band-mini-profile-members-wrapper">
+      <ul class="list-unstyled band-mini-profile-members">
+        {{#each members}}
+          <li>{{position}} :
+            <a href="https://twitter.com/{{twitterId}}" target="_blank">{{twitterId}}</a>
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+</template>

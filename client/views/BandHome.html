@@ -11,7 +11,11 @@
       </div>
     </div>
     <div class="col-xs-12 hidden-md hidden-lg">
-      밴드 미니 프로필 들어갈 부분
+      <div class="panel">
+        <div class="panel-body">
+          {{>BandMiniProfile}}
+        </div>
+      </div>
     </div>
     <div class="col-xs-12 col-md-9">
       {{#if isNotExistSong}}
@@ -22,31 +26,31 @@
           <div class="panel-heading">곡 등록하기</div>
           <div class="panel-body">
             <form class="form-vertical add-song-form">
-              <div class="form-group">
+              <div class="form-group row">
                 <label class="col-xs-4">원곡 밴드이름</label>
                 <div class="col-xs-8">
                   <input id="origin-band-name" type="text" class="form-control" placeholder="원곡 밴드이름을 적어주세요." required>
                 </div>
               </div>
-              <div class="form-group">
+              <div class="form-group row">
                 <label class="col-xs-4">곡 이름</label>
                 <div class="col-xs-8">
                   <input id="song-name" type="text" class="form-control" placeholder="곡 이름을 적어주세요." required>
                 </div>
               </div>
-              <div class="form-group">
+              <div class="form-group row">
                 <label class="col-xs-4">youtube URL</label>
                 <div class="col-xs-8">
                   <input id="youtube-url" type="text" class="form-control" placeholder="곡의 youtube URL을 적어주세요." required>
                 </div>
               </div>
-              <div class="form-group">
+              <div class="form-group row">
                 <label class="col-xs-4">설명</label>
                 <div class="col-xs-8">
                   <textarea id="description" rows="4" class="form-control" placeholder="곡에 대한 설명을 적어주세요." required></textarea>
                 </div>
               </div>
-              <div class="text-right">
+              <div class="text-right row">
                 <button type="submit" class="btn btn-info add-song"><i class="mdi-image-audiotrack"></i>추가</button>
               </div>
             </form>
