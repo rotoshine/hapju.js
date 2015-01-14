@@ -15,6 +15,28 @@ function getProfileImageByTwitterId(twitterId){
   }
 }
 if (Meteor.isClient) {
+  var modalConfirm = {
+    $el: null,
+    show: function(params){
+      this.$el = $('#modal-confirm');
+      var that = this;
+      this.$el.removeClass('hide');
+      this.$el.find('.panel-body').html(params.template);
+
+      this.$el.find('.modal-confirm-ok-button, .modal-confirm.cancel-button').off('click');
+      this.$el.find('.modal-confirm-cancel-button').on('click', function(){
+        that.hide();
+      });
+      this.$el.find('.modal-confirm-ok-button').on('click', function(){
+        params.okCallback();
+        that.hide();
+      });
+    },
+    hide: function(){
+      this.$el = $('#modal-confirm');
+      this.$el.addClass('hide');
+    }
+  };
   var UPLOADED_FILE_KEY = 'uploadedFiles';
   Router.route('/', function () {
     this.render('Index', {
@@ -220,6 +242,9 @@ if (Meteor.isClient) {
       }
       return profileImages;
     },
+    isMySong: function(){
+      return this.registUser === getMyTwitterId();
+    },
     isNotVote: function(){
       var votes = this.votes;
       for(var i = 0; i < votes.length; i++){
@@ -232,7 +257,19 @@ if (Meteor.isClient) {
   });
   
   Template.BandHome.events({
-    'click #hapju-vote': function(){
+    'submit .song-remove-form': function(){
+      var songId = this._id;
+      if(this.registUser === getMyTwitterId()){
+        modalConfirm.show({
+          template: '곡을 삭제하시겠습니까?',
+          okCallback: function(){
+            Songs.remove({ _id: songId }, { justOne: true });
+          }
+        });
+      }
+      return false;
+    },
+    'submit #hapju-vote-form': function(){
       var song = Songs.findOne(this._id);
       var isNotVoted = true;
       for(var i = 0; i < song.votes.length; i++){
@@ -246,20 +283,25 @@ if (Meteor.isClient) {
           twitterId: getMyTwitterId(),
           voteDate: new Date()
         });
+        song.voteCount = song.votes.length;
         Songs.update(this._id, song);
       }
+      return false;
     },
     'submit #add-song-comment-form': function(){
-      var comment = {
-        commentUser: getMyTwitterId(),
-        content: $('#comment-content').val(),
-        createdAt: new Date(),
-        songId: this._id
-      };
+      var $commentContent = $('#comment-content');
+      if($commentContent.val() !== ''){
+        var comment = {
+          commentUser: getMyTwitterId(),
+          content: $commentContent.val(),
+          createdAt: new Date(),
+          songId: this._id
+        };
 
-      SongComments.insert(comment);
+        SongComments.insert(comment);
 
-      $('#comment-content').val('');
+        $commentContent.val('');
+      }
       return false;
     },
     'submit .add-song-form': function(){
