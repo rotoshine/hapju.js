@@ -1,6 +1,7 @@
 <template name="BandHome">
   {{>Nav}}
   {{>ModalConfirm}}
+  {{>ModalAlert}}
   <div class="container">
     <div class="col-md-3 hidden-xs hidden-sm">
       <div class="panel">
@@ -14,7 +15,7 @@
     </div>
     <div class="col-xs-12 col-md-9">
       {{#if isNotExistSong}}
-        <div class="well">저런! 밴드에 등록된 곡이 없네요.</div>
+        <div class="well">저런! 합주곡이 없네요.</div>
       {{/if}}
       {{#if isMyBand}}
         <div class="add-song panel panel-material-indigo">

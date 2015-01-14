@@ -4,7 +4,12 @@ var SongComments = new Mongo.Collection('songComments');
 
 moment.locale('ko');
 function getMyTwitterId(){
-  return Meteor.user().services.twitter.screenName;
+  var user = Meteor.user();
+  if(user && user.services && user.services.twitter){
+    return Meteor.user().services.twitter.screenName;
+  }else {
+    return undefined;
+  }
 }
 function getProfileImageByTwitterId(twitterId){
   var user = Meteor.users.findOne({'services.twitter.screenName': twitterId});
@@ -15,6 +20,24 @@ function getProfileImageByTwitterId(twitterId){
   }
 }
 if (Meteor.isClient) {
+  var modalAlert = {
+    init: function(){
+      var that = this;
+      $('#modal-alert').find('button').off('click');
+      $('#modal-alert').find('button').on('click', function(){
+        that.hide();
+      });
+    },
+    show: function(message){
+      this.init();
+      $('#modal-alert').find('.panel-body').html(message);
+      $('#modal-alert').removeClass('hide');
+    },
+    hide: function(){
+      $('#modal-alert').addClass('hide');
+    }
+  };
+
   var modalConfirm = {
     $el: null,
     show: function(params){
@@ -140,7 +163,7 @@ if (Meteor.isClient) {
   var registBand = {
     members: [{
       position: '',
-      twitterId: ''
+      twitterId: getMyTwitterId()
     }]
   };
 
@@ -157,7 +180,6 @@ if (Meteor.isClient) {
   Template.RegistBand.events({
     'click .upload-control.start': function(){
       Uploader.finished = function(index, file){
-        console.log('uploaded file', file);
         if(location.href.indexOf('hapju.winterwolf.me') > -1){
           file.url = file.url.replace('localhost:3000', location.host);
           file.url = file.url.replace('127.0.0.1:3000', location.host);
@@ -169,7 +191,10 @@ if (Meteor.isClient) {
     'click .add-member': function(){
       Blaze.render(Template.RegistBandMember, $('.regist-band-members')[0]);
     },
-    'click .regist-band': function(){      
+    'click .regist-band': function(){
+      $('.regist-band-form').submit();
+    },
+    'submit .regist-band-form': function(){
       var uploadedFile = Session.get(UPLOADED_FILE_KEY);
 
       // default profile image
@@ -179,7 +204,11 @@ if (Meteor.isClient) {
       }
 
       var name = $('#regist-band-name').val();
-      
+
+      if(name === ''){
+        modalAlert.show('밴드 이름을 적어주세요.');
+        return false;
+      }
       // form validation
       var band = {
         name: name,
@@ -198,12 +227,27 @@ if (Meteor.isClient) {
           twitterId: $(this).find('.regist-band-member-twitter-id').val()
         });
       });
-
-      Bands.insert(band);
+      if(band.members.length === 0){
+        modalAlert.show('멤버는 1명 이상 있어야죠.');
+        return false;
+      }
+      var hasMe = false;
+      for(var i = 0; i < band.members.length;i++){
+        if(band.members[i].twitterId === getMyTwitterId()){
+          hasMe = true;
+          break;
+        }
+      }
+      if(hasMe){
+        Bands.insert(band);
+      }else{
+        modalAlert.show('밴드 멤버에 자신이 포함되어 있어야 합니다.');
+      }
 
       // form initialize
       $('#regist-band-name').val('');
       $('.regist-band-member').remove();
+      $('.uploaded-image').attr('src', '');
       Blaze.render(Template.RegistBandMember, $('.regist-band-members')[0]);
 
       return false;
@@ -334,25 +378,33 @@ if (Meteor.isClient) {
         votes: [],
         registUser: Meteor.user().services.twitter.screenName,
         createAt: new Date()
-      };            
-      Songs.insert(song);
-      
-      // band song count add
-      Bands.update(
-        this._id,
-        {
-          $inc: {
-            songCount: 1
-          }  
-        }
-      );
-      
-      // form init
-      $('#origin-band-name').val('');
-      $('#song-name').val('');
-      $youtubeUrl.val('');
-      $('#description').val('');
-      
+      };
+
+      if(song.originBandName === ''){
+        modalAlert.show('어떤 밴드의 노래인지 좀 적어주시면 어디 덧납니까.');
+      }else if(song.name === ''){
+        modalAlert.show('노래 이름....적어줘요...');
+      }else if(youtubeUrl === '' || youtubeUrl.indexOf('youtube') === -1){
+        modalAlert.show('올바른 youtube 링크를 적어주세요.');
+      }else{
+        Songs.insert(song);
+
+        // band song count add
+        Bands.update(
+          this._id,
+          {
+            $inc: {
+              songCount: 1
+            }
+          }
+        );
+
+        // form init
+        $('#origin-band-name').val('');
+        $('#song-name').val('');
+        $youtubeUrl.val('');
+        $('#description').val('');
+      }
       return false;
     }
   });
