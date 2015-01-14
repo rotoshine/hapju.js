@@ -153,12 +153,15 @@ if (Meteor.isClient) {
       return Session.get(UPLOADED_FILE_KEY);
     }
   });
-   
+
   Template.RegistBand.events({
     'click .upload-control.start': function(){
       Uploader.finished = function(index, file){
-        Uploader.uploadUrl = location.protocol + '//' + location.host + '/';
         console.log('uploaded file', file);
+        if(location.href.indexOf('hapju.winterwolf.me') > -1){
+          file.url = file.url.replace('localhost:3000', location.host);
+          file.url = file.url.replace('127.0.0.1:3000', location.host);
+        }
         $('.uploaded-image').attr('src', file.url);
         Session.set(UPLOADED_FILE_KEY, file);
       }
